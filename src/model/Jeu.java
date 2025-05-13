@@ -23,7 +23,7 @@ public class Jeu extends Observable implements Runnable{
     }
 
     private PieceCourante getNouvellePiece(){
-
+        return new PieceCourante(this.grille);
     }
 
 
