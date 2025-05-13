@@ -1,5 +1,5 @@
 import model.M;
-import vuecontroller.VC;
+import vue.VC;
 
 public class Main {
     public static void main(String[] args) {

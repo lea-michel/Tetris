@@ -1,11 +1,10 @@
-package vuecontroller;
+package vue;
 
 import model.M;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
