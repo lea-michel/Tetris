@@ -29,14 +29,14 @@ public class Vue extends JFrame implements Observer {
 
         JPanel prevPiece = new JPanel(new GridLayout(4, 4));
 
-        /*
+
         prevPiece.setPreferredSize(new Dimension(100, 100));
         prevPiece.setMinimumSize(new Dimension(100, 100));
         prevPiece.setMaximumSize(new Dimension(100, 100));
         prevPiece.setBackground(Color.RED);
 
-        JPanel contenPrev = new JPanel(new BoxLayout(prevPiece));
-        */
+        JPanel contenPrev = new JPanel(new BoxLayout(prevPiece, 0));
+
 
         // Ajouter les éléments du BorderLayout
         borderPanel.add(gridPanel, BorderLayout.CENTER);
