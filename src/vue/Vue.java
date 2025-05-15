@@ -103,14 +103,14 @@ public class Vue extends JFrame implements Observer {
                 final int row = i;
                 final int col = j;
 
-                c.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("row/col: " + row +"/"+col);
-                        jeu.set(row,col);
-                        update(new Observable(), jeu);
-                    }
-                });
+//                c.addMouseListener(new MouseAdapter() {
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//                        System.out.println("row/col: " + row +"/"+col);
+//                        jeu.set(row,col);
+//                        update(new Observable(), jeu);
+//                    }
+//                });
                 gridPanel.add(c);
             }
         }
@@ -125,14 +125,18 @@ public class Vue extends JFrame implements Observer {
         //mettre en blanc le background de toutes les cases
         for(int i=0; i<20; i++){
             for(int j=0; j<10; j++){
-                tab[i][j].setBackground(Color.WHITE);
+
+                if(this.jeu.getGrille().getTab()[i][j]!=false){
+                    tab[i][j].setBackground(Color.BLUE);
+                }
+
             }
         }
 
         //mettre en bleu la case sélectionnée
-        if(jeu.getCaseSelectionnee()!=null){
-            tab[jeu.getCaseSelectionnee().getX()][jeu.getCaseSelectionnee().getY()].setBackground(Color.blue);
-        }
+//        if(jeu.getCaseSelectionnee()!=null){
+//            tab[jeu.getCaseSelectionnee().getX()][jeu.getCaseSelectionnee().getY()].setBackground(Color.blue);
+//        }
 
         }
 
