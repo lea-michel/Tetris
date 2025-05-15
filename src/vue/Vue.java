@@ -2,10 +2,14 @@ package vue;
 
 import model.Jeu;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,6 +19,7 @@ public class Vue extends JFrame implements Observer {
 
     JPanel[][] tab = new JPanel[20][10];
     JPanel[][] prev = new JPanel[4][4];
+
 
     public Vue(Jeu jeu) throws HeadlessException {
         this.jeu = jeu;
@@ -29,11 +34,24 @@ public class Vue extends JFrame implements Observer {
         prevPiece.setSize(new Dimension(50,50));
         JPanel contenPrev = new JPanel(new BorderLayout());
 
-        //Créer des JPanel neutres pour remplir
+        // Créer des JPanel neutres pour remplir
         JPanel northPanel = new JPanel();
         JPanel southPanel = new JPanel();
         JPanel eastPanel = new JPanel();
         JPanel westPanel = new JPanel();
+
+        // Créer l'espace du bouton play-pause
+
+        JPanel playPause = new JPanel();
+
+        JLabel play = new JLabel("Play");
+        JLabel pause = new JLabel("Pause");
+        play.setBorder(new LineBorder(Color.BLACK));
+        pause.setBorder(new LineBorder(Color.BLACK));
+
+        // Assembler les composants
+
+        playPause.add(play);
 
         northPanel.setPreferredSize(new Dimension(50,50));
         southPanel.setPreferredSize(new Dimension(50,50));
@@ -53,7 +71,7 @@ public class Vue extends JFrame implements Observer {
         borderPanel.add(contenPrev, BorderLayout.NORTH);
         borderPanel.add(new JPanel(), BorderLayout.EAST);
         borderPanel.add(new JPanel(), BorderLayout.WEST);
-        borderPanel.add(new JPanel(), BorderLayout.SOUTH);
+        borderPanel.add(playPause, BorderLayout.SOUTH);
 
 
         for (int i=0; i<4; i++) {
