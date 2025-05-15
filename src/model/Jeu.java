@@ -5,6 +5,7 @@ import java.util.Observable;
 public class Jeu extends Observable implements Runnable{
 
     private PieceCourante pc;
+    private Case selectedCase;
     private Grille grille;
 
     private static int ROW = 20;
@@ -16,6 +17,14 @@ public class Jeu extends Observable implements Runnable{
         pc = getNouvellePiece();
 
     }
+
+    public void set(int row, int col) {
+        selectedCase = new Case(row, col);
+    }
+
+    public Case getCaseSelectionnee() {
+        return this.selectedCase;
+    };
 
     @Override
     public void run() {

@@ -25,22 +25,35 @@ public class Vue extends JFrame implements Observer {
         JPanel gridPanel = new JPanel(new GridLayout(20, 10));
 
         // Créer la prévision des pièces
-
-
         JPanel prevPiece = new JPanel(new GridLayout(4, 4));
+        prevPiece.setSize(new Dimension(50,50));
+        JPanel contenPrev = new JPanel(new BorderLayout());
 
+        //Créer des JPanel neutres pour remplir
+        JPanel northPanel = new JPanel();
+        JPanel southPanel = new JPanel();
+        JPanel eastPanel = new JPanel();
+        JPanel westPanel = new JPanel();
 
-        prevPiece.setPreferredSize(new Dimension(100, 100));
-        prevPiece.setMinimumSize(new Dimension(100, 100));
-        prevPiece.setMaximumSize(new Dimension(100, 100));
-        prevPiece.setBackground(Color.RED);
+        northPanel.setPreferredSize(new Dimension(50,50));
+        southPanel.setPreferredSize(new Dimension(50,50));
+        eastPanel.setPreferredSize(new Dimension(50,50));
+        westPanel.setPreferredSize(new Dimension(50,50));
 
-        JPanel contenPrev = new JPanel(new BoxLayout(prevPiece, 0));
 
 
         // Ajouter les éléments du BorderLayout
+        contenPrev.add(prevPiece, BorderLayout.CENTER);
+        contenPrev.add(northPanel, BorderLayout.NORTH);
+        contenPrev.add(southPanel, BorderLayout.SOUTH);
+        contenPrev.add(eastPanel, BorderLayout.EAST);
+        contenPrev.add(westPanel, BorderLayout.WEST);
+
         borderPanel.add(gridPanel, BorderLayout.CENTER);
-        borderPanel.add(prevPiece, BorderLayout.NORTH);
+        borderPanel.add(contenPrev, BorderLayout.NORTH);
+        borderPanel.add(new JPanel(), BorderLayout.EAST);
+        borderPanel.add(new JPanel(), BorderLayout.WEST);
+        borderPanel.add(new JPanel(), BorderLayout.SOUTH);
 
 
         for (int i=0; i<4; i++) {
@@ -76,7 +89,8 @@ public class Vue extends JFrame implements Observer {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         System.out.println("row/col: " + row +"/"+col);
-                        // jeu.set(row,col);
+                        jeu.set(row,col);
+                        update(new Observable(), jeu);
                     }
                 });
                 gridPanel.add(c);
@@ -88,15 +102,19 @@ public class Vue extends JFrame implements Observer {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-    @Override
+
     public void update(Observable o, Object arg) {
         //mettre en blanc le background de toutes les cases
-        for(int i=0; i<tab.length; i++){
-            for(int j=0; j< tab.length; j++){
+        for(int i=0; i<20; i++){
+            for(int j=0; j<10; j++){
                 tab[i][j].setBackground(Color.WHITE);
             }
         }
 
+        //mettre en bleu la case sélectionnée
+        if(jeu.getCaseSelectionnee()!=null){
+            tab[jeu.getCaseSelectionnee().getX()][jeu.getCaseSelectionnee().getY()].setBackground(Color.blue);
+        }
 
         }
 
