@@ -1,5 +1,3 @@
-import model.M;
-import vue.VC;
 import model.Jeu;
 import vue.Vue;
 

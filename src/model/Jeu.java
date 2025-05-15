@@ -13,22 +13,27 @@ public class Jeu extends Observable implements Runnable{
     public Jeu() {
         new Ordonnanceur(this,1000).start();
         boolean[][] tab = new boolean[ROW][COL];
-        this.grille = new Grille(tab);
         pc = getNouvellePiece();
+        this.grille = new Grille(tab, pc);
+        //this.grille.setTab(this.grille.getGlobalState());
 
     }
 
-    public void set(int row, int col) {
-        selectedCase = new Case(row, col);
+    public Grille getGrille() {
+        return grille;
     }
-
-    public Case getCaseSelectionnee() {
-        return this.selectedCase;
-    };
 
     @Override
     public void run() {
+        
+        if(grille!=null){
+            this.grille.setTab(this.grille.getGlobalState());
+        }
+        //pc.move();
 
+
+        setChanged();
+        notifyObservers();
     }
 
     private PieceCourante getNouvellePiece(){
