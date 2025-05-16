@@ -10,12 +10,15 @@ public class Jeu extends Observable implements Runnable{
 
     private static int ROW = 20;
     private static int COL = 10;
+
+    private boolean gameOver = false;
+
     public Jeu() {
         new Ordonnanceur(this,1000).start();
         boolean[][] tab = new boolean[ROW][COL];
-        pc = getNouvellePiece();
-        this.grille = new Grille(tab, pc);
-        //this.grille.setTab(this.grille.getGlobalState());
+        this.grille = new Grille(tab);
+        this.pc = getNouvellePiece();
+        grille.setPieceCourante(pc);
 
     }
 
@@ -23,21 +26,44 @@ public class Jeu extends Observable implements Runnable{
         return grille;
     }
 
+    public PieceCourante getPc() {
+        return pc;
+    }
+
     @Override
     public void run() {
-        
-        if(grille!=null){
-            this.grille.setTab(this.grille.getGlobalState());
+        if(pc!=null){
+            if(pc.move()){
+                grille.movePieceDown();
+            }else {
+                System.out.println("piece blocked");
+                pc=getNouvellePiece();
+
+            }
+        }else{
+            pc=getNouvellePiece();
         }
-        //pc.move();
-
-
         setChanged();
         notifyObservers();
     }
 
     private PieceCourante getNouvellePiece(){
-        return new PieceCourante(this.grille);
+        try{
+            if (this.grille != null){
+                PieceCourante newPieceCourante = new PieceCourante(this.grille);
+                grille.setPieceCourante(newPieceCourante);
+                grille.setPcX(0);
+                grille.setPcY(0);
+                if(!grille.checkMovePossible(newPieceCourante, 0, COL/2)){
+                    gameOver = true;
+                    System.out.println("Game over :(");
+                }
+                return newPieceCourante;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 

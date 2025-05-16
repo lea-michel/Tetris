@@ -16,17 +16,12 @@ public class PieceCourante {
         return motif[currentPosition];
     }
 
-    public int getCurrentPosition() {
-        return currentPosition;
-    }
-
-    public boolean move(Direction direction){
-
-        if(!grille.move(this, direction)){
-
+    public boolean move(){
+        if(grille!=null){
+            System.out.println("move");
+            return grille.move(this);
         }
-
-        return true;
+        else return false;
     }
 
     public boolean rotate(Direction direction){
