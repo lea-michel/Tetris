@@ -34,7 +34,7 @@ public class Vue extends JFrame implements Observer {
 
         // Créer la prévision des pièces
         JPanel prevPiece = new JPanel(new GridLayout(4, 4));
-        prevPiece.setSize(new Dimension(50,50));
+        prevPiece.setSize(new Dimension(50, 50));
         JPanel contenPrev = new JPanel(new BorderLayout());
 
         // Créer des JPanel neutres pour remplir
@@ -44,23 +44,22 @@ public class Vue extends JFrame implements Observer {
         JPanel westPanel = new JPanel();
 
         // Créer l'espace du bouton play-pause
-
         JPanel playPause = new JPanel();
 
         JLabel play = new JLabel("Play");
         JLabel pause = new JLabel("Pause");
         play.setBorder(new LineBorder(Color.BLACK));
         pause.setBorder(new LineBorder(Color.BLACK));
+        prevPiece.setBorder(new LineBorder(Color.BLACK));
 
         // Assembler les composants
 
         playPause.add(play);
 
-        northPanel.setPreferredSize(new Dimension(50,50));
-        southPanel.setPreferredSize(new Dimension(50,50));
-        eastPanel.setPreferredSize(new Dimension(50,50));
-        westPanel.setPreferredSize(new Dimension(50,50));
-
+        northPanel.setPreferredSize(new Dimension(50, 50));
+        southPanel.setPreferredSize(new Dimension(50, 50));
+        eastPanel.setPreferredSize(new Dimension(50, 50));
+        westPanel.setPreferredSize(new Dimension(50, 50));
 
 
         // Ajouter les éléments du BorderLayout
@@ -83,10 +82,11 @@ public class Vue extends JFrame implements Observer {
             }
         });
 
-        for (int i=0; i<4; i++) {
+        // Remplissage des cases de prevPiece
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 JPanel c = new JPanel();
-                c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                c.setBorder(BorderFactory.createLineBorder(Color.WHITE));
                 prev[i][j] = c; //permet de sauvegarder la position de chaque case
 
                 final int row = i;
@@ -103,12 +103,13 @@ public class Vue extends JFrame implements Observer {
             }
         }
 
-        for (int i=0; i<20; i++){
-            for (int j=0; j<10; j++){
+        // Remplissage des cases de la Grille
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 10; j++) {
                 JPanel c = new JPanel();
                 c.setBackground(Color.WHITE);
-//                c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                tab[i][j]= c; //permet de sauvegarder la position de chaque case
+                // c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                tab[i][j] = c; //permet de sauvegarder la position de chaque case
 
                 final int row = i;
                 final int col = j;
@@ -151,6 +152,22 @@ public class Vue extends JFrame implements Observer {
         }
 
 
+        // Afficher la pièce à venir
+
+        PieceCourante nextPc = jeu.getNextPc();
+        if (nextPc != null) {
+            int[][] motif = nextPc.getMotif();
+            for (int i = 0; i < motif.length; i++) {
+                for (int j = 0; j < motif[0].length; j++) {
+                    if (motif[i][j] != 0) {
+                        prev[i][j].setBackground(Color.RED);
+                    }
+                    else {
+                        prev[i][j].setBackground(Color.WHITE);
+                    }
+                }
+            }
+        }
         // ➕ Afficher la pièce courante
         PieceCourante pc = jeu.getPc();
         if (pc != null) {
@@ -172,8 +189,5 @@ public class Vue extends JFrame implements Observer {
                 }
             }
         }
-
-        }
-
     }
-
+}

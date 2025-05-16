@@ -5,6 +5,7 @@ import java.util.Observable;
 public class Jeu extends Observable implements Runnable{
 
     private PieceCourante pc;
+    private PieceCourante nextPc;
     private Case selectedCase;
     private Grille grille;
 
@@ -14,7 +15,7 @@ public class Jeu extends Observable implements Runnable{
     private boolean gameOver = false;
 
     public Jeu() {
-        new Ordonnanceur(this,1000).start();
+        new Ordonnanceur(this,300).start();
         boolean[][] tab = new boolean[ROW][COL];
         this.grille = new Grille(tab);
         this.pc = getNouvellePiece();
@@ -30,14 +31,24 @@ public class Jeu extends Observable implements Runnable{
         return pc;
     }
 
+    public PieceCourante getNextPc() {
+        return nextPc;
+    }
+
     @Override
     public void run() {
         if(pc!=null){
+
+
             if(pc.move()){
+                if (nextPc==null) {
+                    nextPc=getNouvellePiece();
+                }
                 grille.movePieceDown();
             }else {
                 System.out.println("piece blocked");
-                pc=getNouvellePiece();
+                pc=nextPc;
+                nextPc=getNouvellePiece();
 
             }
         }else{
