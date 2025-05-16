@@ -79,7 +79,7 @@ public class Vue extends JFrame implements Observer {
         playPause.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                jeu.playPause();
+                // jeu.playPause();
             }
         });
 
