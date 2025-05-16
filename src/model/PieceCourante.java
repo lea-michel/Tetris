@@ -12,6 +12,10 @@ public class PieceCourante {
         this.grille = grille;
     }
 
+    public void setGrille(Grille grille) {
+        this.grille = grille;
+    }
+
     public int[][] getMotif() {
         return motif[currentPosition];
     }

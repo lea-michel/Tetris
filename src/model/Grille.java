@@ -4,7 +4,7 @@ public class Grille {
     private boolean[][] tab;
     private PieceCourante pc;
     private int pcX = 0;
-    private int pcY = 0;
+    private int pcY = 3;
 
 
 
@@ -25,6 +25,10 @@ public class Grille {
         this.pc = pc;
     }
 
+    public PieceCourante getPc() {
+        return pc;
+    }
+
     public int getPcX() {
         return pcX;
     }
@@ -39,6 +43,11 @@ public class Grille {
 
     public void setPcY(int pcY) {
         this.pcY = pcY;
+    }
+
+    public void initPosPc(){
+        this.pcX=0;
+        this.pcY=3;
     }
 
     public boolean move (PieceCourante pieceCourante){
@@ -75,7 +84,18 @@ public class Grille {
         pcX++;
     }
 
-    public void lockPiece(){
+    public boolean lockPiece(){
+        int[][] motif = pc.getMotif();
+        int motifSize = motif.length;
+        //parcourir la petite grille de la pièce courante
+        for(int i = 0; i<motifSize; i++){
+            for(int j=0; j<motifSize; j++){
+                if (motif[i][j]!=0){
+                    this.tab[pcX+i][pcY+j]=true;
+                }
+            }
+        }
+        return true;
 
 
     }
@@ -85,7 +105,16 @@ public class Grille {
     }
 
     public boolean checkIfGridBlocked(){
+
         return true;
+    }
+
+    public void emptyGrille(){
+        for(int i = 0; i<this.tab.length; i++){
+            for(int j=0; j<this.tab.length; j++){
+                this.tab[pcX+i][pcY+j]=false;
+            }
+        }
     }
 
 

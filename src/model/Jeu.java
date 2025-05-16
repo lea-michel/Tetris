@@ -37,25 +37,34 @@ public class Jeu extends Observable implements Runnable{
 
     @Override
     public void run() {
-        if(pc!=null){
 
+        if(pc!=null){
 
             if(pc.move()){
                 if (nextPc==null) {
-                    nextPc=getNouvellePiece();
+                    nextPc=getNouvellePiecePrev();
                 }
                 grille.movePieceDown();
             }else {
                 System.out.println("piece blocked");
-                pc=nextPc;
-                nextPc=getNouvellePiece();
+                this.grille.lockPiece();
+
+                grille.initPosPc();
+                pc = nextPc;
+                grille.setPieceCourante(pc);
+
+
+                nextPc=null;
 
             }
         }else{
             pc=getNouvellePiece();
         }
+
+
         setChanged();
         notifyObservers();
+
     }
 
     private PieceCourante getNouvellePiece(){
@@ -64,7 +73,7 @@ public class Jeu extends Observable implements Runnable{
                 PieceCourante newPieceCourante = new PieceCourante(this.grille);
                 grille.setPieceCourante(newPieceCourante);
                 grille.setPcX(0);
-                grille.setPcY(0);
+                grille.setPcY(3);
                 if(!grille.checkMovePossible(newPieceCourante, 0, COL/2)){
                     gameOver = true;
                     System.out.println("Game over :(");
@@ -75,6 +84,11 @@ public class Jeu extends Observable implements Runnable{
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    private  PieceCourante getNouvellePiecePrev(){
+        PieceCourante newPieceCourante = new PieceCourante(this.grille);
+        return newPieceCourante;
     }
 
 
