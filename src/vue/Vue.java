@@ -73,6 +73,12 @@ public class Vue extends JFrame implements Observer {
         borderPanel.add(new JPanel(), BorderLayout.WEST);
         borderPanel.add(playPause, BorderLayout.SOUTH);
 
+        playPause.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                jeu.playPause();
+            }
+        });
 
         for (int i=0; i<4; i++) {
             for (int j = 0; j < 4; j++) {

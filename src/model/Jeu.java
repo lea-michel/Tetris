@@ -10,8 +10,11 @@ public class Jeu extends Observable implements Runnable{
 
     private static int ROW = 20;
     private static int COL = 10;
+
+    private Ordonnanceur ordo = new Ordonnanceur(this,1000);
+
     public Jeu() {
-        new Ordonnanceur(this,1000).start();
+        ordo.start();
         boolean[][] tab = new boolean[ROW][COL];
         pc = getNouvellePiece();
         this.grille = new Grille(tab, pc);
@@ -21,6 +24,10 @@ public class Jeu extends Observable implements Runnable{
 
     public Grille getGrille() {
         return grille;
+    }
+
+    public void playPause() {
+        ordo.onOff();
     }
 
     @Override
