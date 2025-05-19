@@ -27,7 +27,7 @@ public class Ordonnanceur extends Thread{
             try {
                 Thread.sleep(pause);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                break;
             }
         }
     }

@@ -134,60 +134,107 @@ public class Vue extends JFrame implements Observer {
 
     public void update(Observable o, Object arg) {
 
-        // Réinitialiser toutes les cases
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 10; j++) {
-                tab[i][j].setBackground(Color.WHITE);
-            }
-        }
+        if(jeu.isGameOver()){
+            System.out.println("game ovvvverrr");
+            String[] options = { "quit", "play again" };
+            int choice = JOptionPane.showOptionDialog(
+                    null,
+                    "Game Over!\nDo you want to play again?",
+                    "Game Over",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[1]
+            );
 
-        // Afficher les cases fixes (déjà dans la grille)
-        boolean[][] grilleFixe = this.jeu.getGrille().getTab();
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (grilleFixe[i][j]) {
-                    tab[i][j].setBackground(Color.BLUE);
+            if (choice == 1) {
+                jeu.restartGame();
+            } else {
+                System.exit(0);
+            }
+
+        }else {
+
+            // Réinitialiser toutes les cases
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 10; j++) {
+                    tab[i][j].setBackground(Color.WHITE);
                 }
             }
-        }
 
-
-        // Afficher la pièce à venir
-
-        PieceCourante nextPc = jeu.getNextPc();
-        if (nextPc != null) {
-            int[][] motif = nextPc.getMotif();
-            for (int i = 0; i < motif.length; i++) {
-                for (int j = 0; j < motif[0].length; j++) {
-                    if (motif[i][j] != 0) {
-                        prev[i][j].setBackground(Color.RED);
-                    }
-                    else {
-                        prev[i][j].setBackground(Color.WHITE);
+            // Afficher les cases fixes (déjà dans la grille)
+            boolean[][] grilleFixe = this.jeu.getGrille().getTab();
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (grilleFixe[i][j]) {
+                        tab[i][j].setBackground(Color.BLUE);
                     }
                 }
             }
-        }
-        // ➕ Afficher la pièce courante
-        PieceCourante pc = jeu.getPc();
-        if (pc != null) {
-            int[][] motif = pc.getMotif();
-            int pcX = jeu.getGrille().getPcX();
-            int pcY = jeu.getGrille().getPcY();
 
-            for (int i = 0; i < motif.length; i++) {
-                for (int j = 0; j < motif[0].length; j++) {
-                    if (motif[i][j] != 0) {
-                        int x = pcX + i;
-                        int y = pcY + j;
 
-                        // Vérifier que les coordonnées sont dans les limites de la grille
-                        if (x >= 0 && x < 20 && y >= 0 && y < 10) {
-                            tab[x][y].setBackground(Color.RED); // ou une couleur selon motif[i][j]
+            // Afficher la pièce à venir
+
+            PieceCourante nextPc = jeu.getNextPc();
+            if (nextPc != null) {
+                int[][] motif = nextPc.getMotif();
+                for (int i = 0; i < motif.length; i++) {
+                    for (int j = 0; j < motif[0].length; j++) {
+                        if (motif[i][j] != 0) {
+                            prev[i][j].setBackground(Color.RED);
+                        } else {
+                            prev[i][j].setBackground(Color.WHITE);
+                        }
+                    }
+                }
+            }
+
+            // ➕ Afficher la pièce courante
+            PieceCourante pc = jeu.getPc();
+            if (pc != null) {
+                int[][] motif = pc.getMotif();
+                int pcX = jeu.getGrille().getPcX();
+                int pcY = jeu.getGrille().getPcY();
+
+                for (int i = 0; i < motif.length; i++) {
+                    for (int j = 0; j < motif[0].length; j++) {
+                        if (motif[i][j] != 0) {
+                            int x = pcX + i;
+                            int y = pcY + j;
+
+                            // Vérifier que les coordonnées sont dans les limites de la grille
+                            if (x >= 0 && x < 20 && y >= 0 && y < 10) {
+                                tab[x][y].setBackground(Color.RED); // ou une couleur selon motif[i][j]
+                            }
                         }
                     }
                 }
             }
         }
+
+//        if(jeu.isGameOver()){
+//            System.out.println("game ovvvverrr");
+//            String[] options = { "quit", "play again" };
+//            int choice = JOptionPane.showOptionDialog(
+//                    null,
+//                    "Game Over!\nDo you want to play again?",
+//                    "Game Over",
+//                    JOptionPane.YES_NO_OPTION,
+//                    JOptionPane.QUESTION_MESSAGE,
+//                    null,
+//                    options,
+//                    options[1]
+//            );
+//
+//            if (choice == 1) {
+//                jeu.restartGame();
+//            } else {
+//                System.exit(0);
+//            }
+//
+//        }
+
+
     }
 }

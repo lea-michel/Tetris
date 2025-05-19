@@ -6,11 +6,10 @@ public class Grille {
     private int pcX = 0;
     private int pcY = 3;
 
-
+    private int lineDone = 0;
 
     public Grille(boolean[][] tab) {
         this.tab = tab;
-
     }
 
     public boolean[][] getTab() {
@@ -45,13 +44,12 @@ public class Grille {
         this.pcY = pcY;
     }
 
-    public void initPosPc(){
-        this.pcX=0;
-        this.pcY=3;
+    public int getLineDone() {
+        return lineDone;
     }
 
     public boolean move (PieceCourante pieceCourante){
-        return checkMovePossible( pc, 1, 0);
+        return checkMovePossible( pieceCourante, 1, 0);
     }
 
     public boolean checkMovePossible(PieceCourante pc, int x, int y){
@@ -63,7 +61,7 @@ public class Grille {
             for(int j=0; j<motifSize; j++){
                 if (motif[i][j]!=0){
                     int newX = pcX + i + x;
-                    int newY = pcY +j + j;
+                    int newY = pcY +j + y;
 
                     //verify out of bounds
                     if(newX >= tab.length || newY<0 || newY>=tab[0].length){
@@ -71,7 +69,7 @@ public class Grille {
                     }
 
                     //verify collision
-                    if(tab[newX][newY]){
+                    if(tab[newX][newY] && newX>=0){
                         return false;
                     }
                 }
@@ -93,6 +91,10 @@ public class Grille {
                 if (motif[i][j]!=0){
                     this.tab[pcX+i][pcY+j]=true;
                 }
+
+//                if (pcX + i >= 0 && pcX + i < tab.length && pcY + j >= 0 && pcY + j < tab[0].length) {
+//                    tab[pcX + i][pcY + j] = true;
+//                }
             }
         }
         return true;
@@ -100,24 +102,72 @@ public class Grille {
 
     }
 
-    public boolean checkIfRowCompleted(){
-        return true;
+    public void checkIfRowCompleted(){
+        for(int i = 0; i<this.tab.length; i++){
+            boolean full = true;
+            for(int j=0; j<this.tab[i].length; j++){
+                if(tab[i][j]==false){
+                    full = false;
+                    break;
+                }
+
+            }
+
+            if(full){
+                removeLine(i);
+                movePiecesDownAfterLineRemoved(i);
+                i--;
+            }
+        }
+
+
+    }
+
+    public void removeLine(int i){
+        for(int j = 0; j<this.tab[i].length;j++){
+            tab[i][j]=false;
+        }
+        lineDone++;
+    }
+
+    public void movePiecesDownAfterLineRemoved(int fromRow){
+        for (int i = fromRow; i > 0; i--) {
+            for (int j = 0; j < tab[i].length; j++) {
+                tab[i][j] = tab[i - 1][j];
+            }
+        }
+
+        // Clear top row
+        for (int j = 0; j < tab[0].length; j++) {
+            tab[0][j] = false;
+        }
     }
 
     public boolean checkIfGridBlocked(){
-
-        return true;
-    }
-
-    public void emptyGrille(){
-        for(int i = 0; i<this.tab.length; i++){
-            for(int j=0; j<this.tab.length; j++){
-                this.tab[pcX+i][pcY+j]=false;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < tab[i].length; j++) {
+                if (tab[i][j]) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
 
 
+    public void clear() {
+        for(int i = 0; i<this.tab.length; i++){
+            for(int j=0; j<this.tab[i].length; j++){
+                this.tab[i][j]=false;
+            }
+        }
+        pc= null;
+        pcX=0;
+        pcY=0;
+        lineDone=0;
 
+
+
+    }
 }
