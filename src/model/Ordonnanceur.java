@@ -2,13 +2,21 @@ package model;
 
 public class Ordonnanceur extends Thread{
     Runnable r;
-    long pause;
+    private long pause;
     boolean play = true;
     boolean stopped = false ;
 
     public Ordonnanceur (Runnable r, long pause) {
         this.r=r;
         this.pause=pause;
+    }
+
+    public long getPause() {
+        return pause;
+    }
+
+    public void setPause(long pause) {
+        this.pause = pause;
     }
 
     public void onOff() {

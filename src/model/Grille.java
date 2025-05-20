@@ -113,10 +113,6 @@ public class Grille {
                 if (motif[i][j]!=0){
                     this.tab[pcX+i][pcY+j]=true;
                 }
-
-//                if (pcX + i >= 0 && pcX + i < tab.length && pcY + j >= 0 && pcY + j < tab[0].length) {
-//                    tab[pcX + i][pcY + j] = true;
-//                }
             }
         }
         return true;
@@ -124,7 +120,8 @@ public class Grille {
 
     }
 
-    public void checkIfRowCompleted(){
+    public boolean checkIfRowCompleted(){
+        int count =0;
         for(int i = 0; i<this.tab.length; i++){
             boolean full = true;
             for(int j=0; j<this.tab[i].length; j++){
@@ -139,9 +136,17 @@ public class Grille {
                 removeLine(i);
                 movePiecesDownAfterLineRemoved(i);
                 i--;
+                count++;
             }
         }
+        if(count>1){
+            lineDone=(lineDone+20)^count;
+        }else if (count==1){
+            lineDone+=20;
+        }
+        System.out.println("lines done "+lineDone);
 
+        return count>0;
 
     }
 
@@ -149,7 +154,6 @@ public class Grille {
         for(int j = 0; j<this.tab[i].length;j++){
             tab[i][j]=false;
         }
-        lineDone++;
     }
 
     public void movePiecesDownAfterLineRemoved(int fromRow){
