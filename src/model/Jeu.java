@@ -71,51 +71,47 @@ public class Jeu extends Observable implements Runnable{
     public void run() {
         if (gameOver) return;
 
-            if(pc!=null){
-                if(pc.printMove(1,0)){
-                    if (nextPc==null) {
-                        nextPc=getNouvellePiecePrev();
-                    }
-                    grille.movePieceDown();
-                } else {
-                    System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
-                    System.out.println("piece blocked");
-                    this.grille.lockPiece();
+        if(pc!=null){
+            grille.checkIfRowCompleted();
 
-                    //place the next piece
-                    grille.setPcY(nextPosY);
-                    grille.setPcX(nextPosX);
-                    pc = nextPc;
-                    grille.setPieceCourante(pc);
+            decreasePauseOrdonnanceur();
 
-                    nextPc=null;
-
-                    if (grille.checkIfGridBlocked()) {
-                        gameOver = true;
-                        setChanged();
-                        notifyObservers();
-
-                    }
-
-                    if(gameOver){
-                        System.out.println("game 2");
-                        return;
-                    }
+            if(pc.printMove(1,0)){
+                if (nextPc==null) {
+                    nextPc=getNouvellePiecePrev();
                 }
-            }else{
-                pc=getNouvellePiece();
+                grille.movePieceDown();
+            } else {
+                System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
+                System.out.println("piece blocked");
+                this.grille.lockPiece();
+
+                //place the next piece
+                grille.setPcY(nextPosY);
+                grille.setPcX(nextPosX);
+                pc = nextPc;
                 grille.setPieceCourante(pc);
+
+                nextPc=null;
+
+                if (grille.checkIfGridBlocked()) {
+                    gameOver = true;
+                    setChanged();
+                    notifyObservers();
+                }
+
+                if(gameOver){
+                    System.out.println("game 2");
+                    return;
+                }
             }
+        }else{
+            pc=getNouvellePiece();
+            grille.setPieceCourante(pc);
+        }
 
-            setChanged();
-            notifyObservers();
-
-
-
-        // Game over reached
         setChanged();
         notifyObservers();
-
 
     }
 
@@ -206,6 +202,13 @@ public class Jeu extends Observable implements Runnable{
             if(ordonnanceur !=null){
                 ordonnanceur.restart();
             }
+        }
+    }
+
+    private void decreasePauseOrdonnanceur(){
+        if(grille.getLineDone()>0 && grille.getLineDone()%10==0 && ordonnanceur.getPause()>100){
+            ordonnanceur.setPause(ordonnanceur.getPause()-50L);
+            System.out.println("pause ordonnanceur "+ordonnanceur.getPause());
         }
     }
 
