@@ -59,7 +59,6 @@ public class Jeu extends Observable implements Runnable{
     }
 
     public void movePc(int x, int y) {
-
         if(pc.printMove(x,y)) {
             System.out.println("Mouvement possible en " + y);
 
@@ -67,6 +66,11 @@ public class Jeu extends Observable implements Runnable{
         }
     }
 
+    public void rotaPc(Direction direction) {
+        if(grille.checkRotaPossible(pc, direction)) {
+            pc.rotation(direction);
+        }
+    }
     @Override
     public void run() {
         if (gameOver) return;
@@ -78,8 +82,6 @@ public class Jeu extends Observable implements Runnable{
                     }
                     grille.movePieceDown();
                 } else {
-                    System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
-                    System.out.println("piece blocked");
                     this.grille.lockPiece();
 
                     //place the next piece
@@ -148,7 +150,7 @@ public class Jeu extends Observable implements Runnable{
                 grille.setPcX(nextPosX);
                 grille.setPcY(nextPosY);
 
-                if(!grille.checkMovePossible(newPieceCourante, 0, 0)){
+                if(!grille.checkMovePossible(newPieceCourante.getMotif(), 0, 0)){
                     gameOver = true;
                     System.out.println("Game over :(");
                 }else {

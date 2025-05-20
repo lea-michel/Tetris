@@ -1,5 +1,6 @@
 package vue;
 
+import model.Direction;
 import model.Jeu;
 import model.PieceCourante;
 
@@ -267,11 +268,17 @@ public class Vue extends JFrame implements Observer, KeyListener {
         switch(code) {
             case KeyEvent.VK_LEFT :
                 jeu.movePc(0,-1);
-                System.out.println("Flèche gauche pressée");
                 break;
             case KeyEvent.VK_RIGHT :
                 jeu.movePc(0,1);
-                System.out.println("Flèche droite pressée");
+                break;
+            case KeyEvent.VK_W :
+                System.out.println("DROITE");
+                jeu.rotaPc(Direction.DROITE);
+                break;
+            case KeyEvent.VK_X :
+                System.out.println("GAUCHE");
+                jeu.rotaPc(Direction.GAUCHE);
                 break;
         }
     }

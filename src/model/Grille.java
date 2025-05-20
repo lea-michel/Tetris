@@ -49,11 +49,32 @@ public class Grille {
     }
 
     public boolean checkMove(int x, int y, PieceCourante pieceCourante){
-        return checkMovePossible( pieceCourante, x, y);
+        int[][] motif = pc.getMotif();
+        return checkMovePossible(motif, x, y);
+
     }
 
-    public boolean checkMovePossible(PieceCourante pc, int x, int y){
-        int[][] motif = pc.getMotif();
+    public boolean checkRotaPossible(PieceCourante pc, Direction direction) {
+        if (direction == Direction.DROITE) {
+            int[][] motif = pc.getMotifDroite();
+            if (checkMovePossible(motif, pcX, pcY)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            int[][] motif = pc.getMotifGauche();
+            if (checkMovePossible(motif, 0, 0)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+    }
+
+    public boolean checkMovePossible(int[][] motif, int x, int y){
         int motifSize = motif.length;
 
         //parcourir la petite grille de la pièce courante
@@ -65,8 +86,7 @@ public class Grille {
 
                     //verify out of bounds
                     if(newX >= tab.length || newY<0 || newY>=tab[0].length){
-
-                        System.out.println("Illégal");
+                        System.out.println("Sortie de champs");
                         return false;
                     }
 
