@@ -55,7 +55,7 @@ public class Jeu extends Observable implements Runnable{
     }
 
     public void playPause() {
-        ordo.onOff();
+        ordonnanceur.onOff();
     }
 
     @Override
