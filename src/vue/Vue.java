@@ -20,7 +20,15 @@ public class Vue extends JFrame implements Observer {
 
     JPanel[][] tab = new JPanel[20][10];
     JPanel[][] prev = new JPanel[4][4];
+    String playOrPause = "Pause";
 
+    public void playPause() {
+        if (playOrPause.equals("Play")) {
+            playOrPause = "Pause";
+        } else {
+            playOrPause = "Play";
+        }
+    }
 
     public Vue(Jeu jeu) throws HeadlessException {
         this.jeu = jeu;
@@ -46,11 +54,21 @@ public class Vue extends JFrame implements Observer {
         // Créer l'espace du bouton play-pause
         JPanel playPause = new JPanel();
 
-        JLabel play = new JLabel("Play");
-        JLabel pause = new JLabel("Pause");
+        JLabel play = new JLabel(playOrPause);
         play.setBorder(new LineBorder(Color.BLACK));
-        pause.setBorder(new LineBorder(Color.BLACK));
         prevPiece.setBorder(new LineBorder(Color.BLACK));
+
+        playPause.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("pause");
+                jeu.playPause();
+                playPause();
+                play.setText(playOrPause);
+                play.revalidate();  // Pour recalculer la mise en page
+                play.repaint();
+            }
+        });
 
         // Assembler les composants
 

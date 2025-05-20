@@ -48,8 +48,16 @@ public class Grille {
         return lineDone;
     }
 
-    public boolean move (PieceCourante pieceCourante){
+    public boolean checkMoveDown(PieceCourante pieceCourante){
         return checkMovePossible( pieceCourante, 1, 0);
+    }
+
+    public boolean checkMoveLeft(PieceCourante pieceCourante){
+        return checkMovePossible( pieceCourante, 0, -1);
+    }
+
+    public boolean checkMoveRight(PieceCourante pieceCourante){
+        return checkMovePossible( pieceCourante, 0, 1);
     }
 
     public boolean checkMovePossible(PieceCourante pc, int x, int y){

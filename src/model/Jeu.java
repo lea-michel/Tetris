@@ -12,6 +12,7 @@ public class Jeu extends Observable implements Runnable{
     private boolean gameOver = false;
     private int nextPosX;
     private int nextPosY;
+    Ordonnanceur ordo;
 
 
 
@@ -31,7 +32,8 @@ public class Jeu extends Observable implements Runnable{
             gameOver = true;
             System.out.println("Cannot start game, grid already blocked");
         } else {
-            new Ordonnanceur(this, 500).start();
+            ordo = new Ordonnanceur(this, 500);
+            ordo.start();
         }
     }
 
@@ -51,12 +53,16 @@ public class Jeu extends Observable implements Runnable{
         return gameOver;
     }
 
+    public void playPause() {
+        ordo.onOff();
+    }
+
     @Override
     public void run() {
         if (gameOver) return;
 
             if(pc!=null){
-                if(pc.move()){
+                if(pc.printMove()){
                     if (nextPc==null) {
                         nextPc=getNouvellePiecePrev();
                     }
