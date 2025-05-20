@@ -4,6 +4,7 @@ public class Ordonnanceur extends Thread{
     Runnable r;
     long pause;
     boolean play = true;
+    boolean stopped = false ;
 
     public Ordonnanceur (Runnable r, long pause) {
         this.r=r;
@@ -18,10 +19,19 @@ public class Ordonnanceur extends Thread{
         }
     }
 
+    public void stopThread(){
+        stopped=true;
+        this.interrupt();
+    }
+
+    public void restart(){
+        play = true;
+    }
+
     @Override
     public void run() {
-        while(true){
-            if (play==true) {
+        while(!stopped){
+            if (play) {
                 r.run();
             }
             try {

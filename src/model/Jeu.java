@@ -7,12 +7,13 @@ public class Jeu extends Observable implements Runnable{
     private PieceCourante pc;
     private PieceCourante nextPc;
     private Grille grille;
+
+    private Ordonnanceur ordonnanceur;
     private static int ROW = 20;
     private static int COL = 10;
     private boolean gameOver = false;
     private int nextPosX;
     private int nextPosY;
-    Ordonnanceur ordo;
 
 
 
@@ -32,8 +33,8 @@ public class Jeu extends Observable implements Runnable{
             gameOver = true;
             System.out.println("Cannot start game, grid already blocked");
         } else {
-            ordo = new Ordonnanceur(this, 500);
-            ordo.start();
+            ordonnanceur = new Ordonnanceur(this, 500);
+            ordonnanceur.start();
         }
     }
 
@@ -192,7 +193,9 @@ public class Jeu extends Observable implements Runnable{
             gameOver = true;
             System.out.println("Cannot start game, grid already blocked");
         } else {
-            new Ordonnanceur(this, 1000).start();
+            if(ordonnanceur !=null){
+                ordonnanceur.restart();
+            }
         }
     }
 
