@@ -58,17 +58,27 @@ public class Jeu extends Observable implements Runnable{
         ordonnanceur.onOff();
     }
 
+    public void movePc(int x, int y) {
+
+        if(pc.printMove(x,y)) {
+            System.out.println("Mouvement possible en " + y);
+
+            this.grille.setPcY(this.grille.getPcY() + y);
+        }
+    }
+
     @Override
     public void run() {
         if (gameOver) return;
 
             if(pc!=null){
-                if(pc.printMove()){
+                if(pc.printMove(1,0)){
                     if (nextPc==null) {
                         nextPc=getNouvellePiecePrev();
                     }
                     grille.movePieceDown();
-                }else {
+                } else {
+                    System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
                     System.out.println("piece blocked");
                     this.grille.lockPiece();
 

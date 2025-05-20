@@ -48,16 +48,8 @@ public class Grille {
         return lineDone;
     }
 
-    public boolean checkMoveDown(PieceCourante pieceCourante){
-        return checkMovePossible( pieceCourante, 1, 0);
-    }
-
-    public boolean checkMoveLeft(PieceCourante pieceCourante){
-        return checkMovePossible( pieceCourante, 0, -1);
-    }
-
-    public boolean checkMoveRight(PieceCourante pieceCourante){
-        return checkMovePossible( pieceCourante, 0, 1);
+    public boolean checkMove(int x, int y, PieceCourante pieceCourante){
+        return checkMovePossible( pieceCourante, x, y);
     }
 
     public boolean checkMovePossible(PieceCourante pc, int x, int y){
@@ -69,10 +61,12 @@ public class Grille {
             for(int j=0; j<motifSize; j++){
                 if (motif[i][j]!=0){
                     int newX = pcX + i + x;
-                    int newY = pcY +j + y;
+                    int newY = pcY + j + y;
 
                     //verify out of bounds
                     if(newX >= tab.length || newY<0 || newY>=tab[0].length){
+
+                        System.out.println("Illégal");
                         return false;
                     }
 

@@ -3,10 +3,11 @@ package vue;
 import model.Jeu;
 import model.PieceCourante;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -14,7 +15,7 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Vue extends JFrame implements Observer {
+public class Vue extends JFrame implements Observer, KeyListener {
 
     public Jeu jeu;
 
@@ -34,6 +35,9 @@ public class Vue extends JFrame implements Observer {
         this.jeu = jeu;
         this.setTitle("Taie Triste");
         JPanel borderPanel = new JPanel(new BorderLayout());
+
+        setFocusable(true);
+        addKeyListener(this);
 
         // Créer la grille avec GridLayout
         JPanel gridPanel = new JPanel(new GridLayout(20, 10));
@@ -253,6 +257,32 @@ public class Vue extends JFrame implements Observer {
 //
 //        }
 
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        switch(code) {
+            case KeyEvent.VK_LEFT :
+                jeu.movePc(0,-1);
+                System.out.println("Flèche gauche pressée");
+                break;
+            case KeyEvent.VK_RIGHT :
+                jeu.movePc(0,1);
+                System.out.println("Flèche droite pressée");
+                break;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }
