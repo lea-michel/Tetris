@@ -38,6 +38,14 @@ public class Jeu extends Observable implements Runnable{
         }
     }
 
+    public void ordonnanceurSetPause(int i) {
+        ordonnanceur.setPause(i);
+    }
+
+    public int ordonnanceurGetPause() {
+        return Math.toIntExact(ordonnanceur.getPause());
+    }
+
     public Grille getGrille() {
         return grille;
     }
@@ -61,9 +69,9 @@ public class Jeu extends Observable implements Runnable{
     public void movePc(int x, int y) {
 
         if(pc.printMove(x,y)) {
-            System.out.println("Mouvement possible en " + y);
-
+            this.grille.setPcX(this.grille.getPcX() + x);
             this.grille.setPcY(this.grille.getPcY() + y);
+
         }
     }
 
