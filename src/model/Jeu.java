@@ -14,6 +14,7 @@ public class Jeu extends Observable implements Runnable{
     private boolean gameOver = false;
     private int nextPosX;
     private int nextPosY;
+    private ScoreEntry score;
 
 
 
@@ -28,6 +29,7 @@ public class Jeu extends Observable implements Runnable{
 
         this.grille = new Grille(tab);
         this.pc = getNouvellePiece();
+        this.score= new ScoreEntry("", 0);
 
         if (grille.checkIfGridBlocked()) {
             gameOver = true;
@@ -66,6 +68,10 @@ public class Jeu extends Observable implements Runnable{
         ordonnanceur.onOff();
     }
 
+    public ScoreEntry getScore() {
+        return score;
+    }
+
     public void movePc(int x, int y) {
 
         if(pc.printMove(x,y)) {
@@ -87,6 +93,8 @@ public class Jeu extends Observable implements Runnable{
         if(pc!=null){
             if(grille.checkIfRowCompleted()){
                 decreasePauseOrdonnanceur();
+                this.score.setScore(this.grille.getScore());
+                System.out.println(this.score.getScore() +"score jeu");
             }
 
             if(pc.printMove(1,0)){
@@ -157,7 +165,7 @@ public class Jeu extends Observable implements Runnable{
                 grille.setPcX(nextPosX);
                 grille.setPcY(nextPosY);
 
-                if(!grille.checkMovePossible(newPieceCourante.getMotif(), 0, 0)){
+                if(grille.checkIfGridBlocked()){
                     gameOver = true;
                     System.out.println("Game over :(");
                 }else {
@@ -205,6 +213,7 @@ public class Jeu extends Observable implements Runnable{
         pc = null;
         nextPc = null;
         gameOver = false;
+        score.setScore(0);
 
         this.pc = getNouvellePiece();
         // Start the game again

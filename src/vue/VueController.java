@@ -6,24 +6,24 @@ import model.PieceCourante;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Vue extends JFrame implements Observer, KeyListener {
+public class VueController extends JFrame implements Observer, KeyListener {
 
     public Jeu jeu;
 
     JPanel[][] tab = new JPanel[20][10];
     JPanel[][] prev = new JPanel[4][4];
     String playOrPause = "Pause";
+
+    String score = "0";
+    private JLabel currentScore;
 
     public void playPause() {
         if (playOrPause.equals("Play")) {
@@ -33,7 +33,7 @@ public class Vue extends JFrame implements Observer, KeyListener {
         }
     }
 
-    public Vue(Jeu jeu) throws HeadlessException {
+    public VueController(Jeu jeu) throws HeadlessException {
         this.jeu = jeu;
         this.setTitle("Tetris");
         JPanel borderPanel = new JPanel(new BorderLayout());
@@ -54,7 +54,7 @@ public class Vue extends JFrame implements Observer, KeyListener {
         currentScoreTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //Current score
-        JLabel currentScore = new JLabel("0", SwingConstants.CENTER);
+        currentScore = new JLabel(score, SwingConstants.CENTER);
         currentScore.setFont(new Font("Arial", Font.PLAIN, 16));
         currentScore.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -175,6 +175,8 @@ public class Vue extends JFrame implements Observer, KeyListener {
 
     public void update(Observable o, Object arg) {
 
+
+
         if(jeu.isGameOver()){
             System.out.println("game ovvvverrr");
             String[] options = { "quit", "play again" };
@@ -191,11 +193,16 @@ public class Vue extends JFrame implements Observer, KeyListener {
 
             if (choice == 1) {
                 jeu.restartGame();
+                score="";
+                currentScore.setText(score);
             } else {
                 System.exit(0);
             }
 
         }else {
+            //update du score
+            score=jeu.getScore().toStringScore();
+            currentScore.setText(score);
 
             // Réinitialiser toutes les cases
             for (int i = 0; i < 20; i++) {

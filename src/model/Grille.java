@@ -8,6 +8,8 @@ public class Grille {
 
     private int lineDone = 0;
 
+    private int score = 0;
+
     public Grille(boolean[][] tab) {
         this.tab = tab;
     }
@@ -46,6 +48,10 @@ public class Grille {
 
     public int getLineDone() {
         return lineDone;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public boolean checkMove(int x, int y, PieceCourante pieceCourante){
@@ -129,23 +135,22 @@ public class Grille {
                     full = false;
                     break;
                 }
-
             }
 
             if(full){
                 removeLine(i);
                 movePiecesDownAfterLineRemoved(i);
                 i--;
+                lineDone++;
                 count++;
             }
         }
         if(count>1){
-            lineDone=(lineDone+20)^count;
+            score= (int) (score+(Math.pow(20,count)));
         }else if (count==1){
-            lineDone+=20;
+            score+=20;
         }
-        System.out.println("lines done "+lineDone);
-
+        System.out.println(lineDone + "lines done /" + score + "score");
         return count>0;
 
     }
@@ -192,8 +197,7 @@ public class Grille {
         pcX=0;
         pcY=0;
         lineDone=0;
-
-
+        score=0;
 
     }
 }
