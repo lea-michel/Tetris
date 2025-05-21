@@ -2,12 +2,10 @@ package model;
 
 import java.util.Observable;
 
-public class Jeu extends Observable implements Runnable{
-
+public class Jeu extends Observable implements Runnable {
     private PieceCourante pc;
     private PieceCourante nextPc;
     private Grille grille;
-
     private Ordonnanceur ordonnanceur;
     private static int ROW = 20;
     private static int COL = 10;
@@ -15,8 +13,7 @@ public class Jeu extends Observable implements Runnable{
     private int nextPosX;
     private int nextPosY;
     private ScoreEntry score;
-
-
+    private HighScoreManager highScoreManager;
 
     public Jeu() {
         boolean[][] tab = new boolean[ROW][COL];
@@ -29,7 +26,8 @@ public class Jeu extends Observable implements Runnable{
 
         this.grille = new Grille(tab);
         this.pc = getNouvellePiece();
-        this.score= new ScoreEntry("", 0);
+        this.score = new ScoreEntry("", 0);
+        this.highScoreManager = new HighScoreManager();
 
         if (grille.checkIfGridBlocked()) {
             gameOver = true;
@@ -38,14 +36,6 @@ public class Jeu extends Observable implements Runnable{
             ordonnanceur = new Ordonnanceur(this, 500);
             ordonnanceur.start();
         }
-    }
-
-    public void ordonnanceurSetPause(int i) {
-        ordonnanceur.setPause(i);
-    }
-
-    public int ordonnanceurGetPause() {
-        return Math.toIntExact(ordonnanceur.getPause());
     }
 
     public Grille getGrille() {
@@ -72,9 +62,13 @@ public class Jeu extends Observable implements Runnable{
         return score;
     }
 
+    public HighScoreManager getHighScoreManager() {
+        return highScoreManager;
+    }
+
     public void movePc(int x, int y) {
 
-        if(pc.printMove(x,y)) {
+        if (pc.printMove(x, y)) {
             this.grille.setPcX(this.grille.getPcX() + x);
             this.grille.setPcY(this.grille.getPcY() + y);
 
@@ -82,29 +76,30 @@ public class Jeu extends Observable implements Runnable{
     }
 
     public void rotaPc(Direction direction) {
-        if(grille.checkRotaPossible(pc, direction)) {
+        if (grille.checkRotaPossible(pc, direction)) {
             pc.rotation(direction);
         }
     }
+
     @Override
     public void run() {
         if (gameOver) return;
 
-        if(pc!=null){
-            if(grille.checkIfRowCompleted()){
+        if (pc != null) {
+            if (grille.checkIfRowCompleted()) {
                 decreasePauseOrdonnanceur();
                 this.score.setScore(this.grille.getScore());
-                System.out.println(this.score.getScore() +"score jeu");
+                System.out.println(this.score.getScore() + "score jeu");
             }
 
-            if(pc.printMove(1,0)){
-                if (nextPc==null) {
-                    nextPc=getNouvellePiecePrev();
+            if (pc.printMove(1, 0)) {
+                if (nextPc == null) {
+                    nextPc = getNouvellePiecePrev();
                 }
                 grille.movePieceDown();
             } else {
-                System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
-                System.out.println("piece blocked");
+                //System.out.println("X | Y : " + grille.getPcX() + grille.getPcY());
+                //System.out.println("piece blocked");
                 this.grille.lockPiece();
 
                 //place the next piece
@@ -113,7 +108,7 @@ public class Jeu extends Observable implements Runnable{
                 pc = nextPc;
                 grille.setPieceCourante(pc);
 
-                nextPc=null;
+                nextPc = null;
 
                 if (grille.checkIfGridBlocked()) {
                     gameOver = true;
@@ -121,13 +116,12 @@ public class Jeu extends Observable implements Runnable{
                     notifyObservers();
                 }
 
-                if(gameOver){
-                    System.out.println("game 2");
+                if (gameOver) {
                     return;
                 }
             }
-        }else{
-            pc=getNouvellePiece();
+        } else {
+            pc = getNouvellePiece();
             grille.setPieceCourante(pc);
         }
 
@@ -136,13 +130,13 @@ public class Jeu extends Observable implements Runnable{
 
     }
 
-    private PieceCourante getNouvellePiece(){
-        try{
-            if (this.grille != null){
+    private PieceCourante getNouvellePiece() {
+        try {
+            if (this.grille != null) {
                 PieceCourante newPieceCourante = new PieceCourante(this.grille);
 
                 //find first non-empty row in motif
-                int[][] motif =newPieceCourante.getMotif();
+                int[][] motif = newPieceCourante.getMotif();
                 int firstNonEmptyRow = 0;
 
                 for (int i = 0; i < motif.length; i++) {
@@ -165,27 +159,26 @@ public class Jeu extends Observable implements Runnable{
                 grille.setPcX(nextPosX);
                 grille.setPcY(nextPosY);
 
-                if(grille.checkIfGridBlocked()){
+                if (grille.checkIfGridBlocked()) {
                     gameOver = true;
                     System.out.println("Game over :(");
-                }else {
+                } else {
                     grille.setPieceCourante(newPieceCourante);
                     return newPieceCourante;
                 }
 
 
-
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
-    private  PieceCourante getNouvellePiecePrev(){
+    private PieceCourante getNouvellePiecePrev() {
         PieceCourante newPieceCourante = new PieceCourante(this.grille);
         //find first non-empty row in motif
-        int[][] motif =newPieceCourante.getMotif();
+        int[][] motif = newPieceCourante.getMotif();
         int firstNonEmptyRow = 0;
 
         for (int i = 0; i < motif.length; i++) {
@@ -202,13 +195,13 @@ public class Jeu extends Observable implements Runnable{
             }
         }
 
-        nextPosX=-firstNonEmptyRow;
-        nextPosY=COL/2 -2;
+        nextPosX = -firstNonEmptyRow;
+        nextPosY = COL / 2 - 2;
 
         return newPieceCourante;
     }
 
-    public void restartGame(){
+    public void restartGame() {
         grille.clear();
         pc = null;
         nextPc = null;
@@ -221,16 +214,15 @@ public class Jeu extends Observable implements Runnable{
             gameOver = true;
             System.out.println("Cannot start game, grid already blocked");
         } else {
-            if(ordonnanceur !=null){
+            if (ordonnanceur != null) {
                 ordonnanceur.restart();
             }
         }
     }
 
-    private void decreasePauseOrdonnanceur(){
-        if(grille.getLineDone()>0 && grille.getLineDone()%10==0 && ordonnanceur.getPause()>100){
-            ordonnanceur.setPause(ordonnanceur.getPause()-50L);
-            System.out.println("pause ordonnanceur "+ordonnanceur.getPause());
+    private void decreasePauseOrdonnanceur() {
+        if (grille.getLineDone() > 0 && grille.getLineDone() % 10 == 0 && ordonnanceur.getPause() > 100) {
+            ordonnanceur.setPause(ordonnanceur.getPause() - 50L);
         }
     }
 

@@ -3,14 +3,13 @@ package vue;
 import model.Direction;
 import model.Jeu;
 import model.PieceCourante;
+import model.ScoreEntry;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,6 +39,24 @@ public class VueController extends JFrame implements Observer, KeyListener {
 
         setFocusable(true);
         addKeyListener(this);
+
+        // Créer la barre de menu
+        JMenuBar menubar = new JMenuBar();
+        // Créer le menu
+        JMenu menu = new JMenu("Menu");
+        JMenuItem e1 = new JMenuItem("Highest Scores");
+
+        e1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showHighScores();  // Display high scores window
+            }
+        });
+
+        menu.add(e1);
+        menubar.add(menu);
+
+        this.setJMenuBar(menubar);
 
         // Créer la grille avec GridLayout
         JPanel gridPanel = new JPanel(new GridLayout(20, 10));
@@ -173,13 +190,28 @@ public class VueController extends JFrame implements Observer, KeyListener {
 
     }
 
+    private void showHighScores() {
+        List<ScoreEntry> scores = jeu.getHighScoreManager().getHighScores();
+        StringBuilder message = new StringBuilder("High Scores:\n");
+
+        for (ScoreEntry entry : scores) {
+            message.append(entry.getName()).append(" - ").append(entry.getScore()).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(null, message.toString(), "High Scores", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
     public void update(Observable o, Object arg) {
-
-
-
-        if(jeu.isGameOver()){
+        if (jeu.isGameOver()) {
             System.out.println("game ovvvverrr");
-            String[] options = { "quit", "play again" };
+
+            String name = JOptionPane.showInputDialog(null, "Game Over!\nEnter your name:", "Game Over", JOptionPane.PLAIN_MESSAGE);
+            if (name != null && !name.trim().isEmpty()) {
+                jeu.getHighScoreManager().addScore(name, jeu.getScore().getScore());
+            }
+
+            String[] options = {"quit", "play again"};
             int choice = JOptionPane.showOptionDialog(
                     null,
                     "Game Over!\nDo you want to play again?",
@@ -193,15 +225,15 @@ public class VueController extends JFrame implements Observer, KeyListener {
 
             if (choice == 1) {
                 jeu.restartGame();
-                score="";
+                score = "";
                 currentScore.setText(score);
             } else {
                 System.exit(0);
             }
 
-        }else {
+        } else {
             //update du score
-            score=jeu.getScore().toStringScore();
+            score = jeu.getScore().toStringScore();
             currentScore.setText(score);
 
             // Réinitialiser toutes les cases
@@ -266,22 +298,22 @@ public class VueController extends JFrame implements Observer, KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
-        switch(code) {
-            case KeyEvent.VK_LEFT :
-                jeu.movePc(0,-1);
+        switch (code) {
+            case KeyEvent.VK_LEFT:
+                jeu.movePc(0, -1);
                 break;
-            case KeyEvent.VK_RIGHT :
-                jeu.movePc(0,1);
+            case KeyEvent.VK_RIGHT:
+                jeu.movePc(0, 1);
                 break;
-            case KeyEvent.VK_W :
+            case KeyEvent.VK_W:
                 System.out.println("DROITE");
                 jeu.rotaPc(Direction.DROITE);
                 break;
-            case KeyEvent.VK_X :
+            case KeyEvent.VK_X:
                 jeu.rotaPc(Direction.GAUCHE);
                 break;
             case KeyEvent.VK_DOWN:
-                jeu.movePc(1,0);
+                jeu.movePc(1, 0);
                 break;
         }
     }

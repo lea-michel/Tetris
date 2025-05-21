@@ -150,7 +150,6 @@ public class Grille {
         }else if (count==1){
             score+=20;
         }
-        System.out.println(lineDone + "lines done /" + score + "score");
         return count>0;
 
     }
