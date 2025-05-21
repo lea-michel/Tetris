@@ -6,6 +6,7 @@ import model.PieceCourante;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -34,7 +35,7 @@ public class Vue extends JFrame implements Observer, KeyListener {
 
     public Vue(Jeu jeu) throws HeadlessException {
         this.jeu = jeu;
-        this.setTitle("Taie Triste");
+        this.setTitle("Tetris");
         JPanel borderPanel = new JPanel(new BorderLayout());
 
         setFocusable(true);
@@ -42,26 +43,73 @@ public class Vue extends JFrame implements Observer, KeyListener {
 
         // Créer la grille avec GridLayout
         JPanel gridPanel = new JPanel(new GridLayout(20, 10));
-        gridPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//        gridPanel.setBackground(Color.WHITE);
+        gridPanel.setBorder(new LineBorder(Color.BLACK));
+        gridPanel.setBackground(Color.WHITE);
 
-        // Créer la prévision des pièces
-        JPanel prevPiece = new JPanel(new GridLayout(4, 4));
-        prevPiece.setSize(new Dimension(50, 50));
-        JPanel contenPrev = new JPanel(new BorderLayout());
 
-        // Créer des JPanel neutres pour remplir
-        JPanel northPanel = new JPanel();
-        JPanel southPanel = new JPanel();
-        JPanel eastPanel = new JPanel();
-        JPanel westPanel = new JPanel();
+        //Current Score Title
+        JLabel currentScoreTitle = new JLabel("Current Score", SwingConstants.CENTER);
+        currentScoreTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        currentScoreTitle.setBorder(BorderFactory.createEmptyBorder(40, 0, 10, 0));
+        currentScoreTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Créer l'espace du bouton play-pause
-        JPanel playPause = new JPanel();
+        //Current score
+        JLabel currentScore = new JLabel("0", SwingConstants.CENTER);
+        currentScore.setFont(new Font("Arial", Font.PLAIN, 16));
+        currentScore.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Create a vertical panel for title score and score
+        JPanel scorePanel = new JPanel();
+        scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
+        scorePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Add components
+        scorePanel.add(currentScoreTitle);
+        scorePanel.add(Box.createRigidArea(new Dimension(0, 2)));
+        scorePanel.add(currentScore);
+
+        // Title label
+        JLabel previewTitle = new JLabel("Next Piece", SwingConstants.CENTER);
+        previewTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        previewTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+
+        // Créer la grille de prévision des pièces
+        JPanel previewPanel = new JPanel(new GridLayout(4, 4));
+        previewPanel.setBorder(new LineBorder(Color.BLACK));
+
+        //ratio panel - preview
+        AspectRatioPanel previewGridWrapper = new AspectRatioPanel(1.0, previewPanel);
+        previewGridWrapper.setPreferredSize(new Dimension(100, 100));
+
+        //vertical panel - title and preview
+        JPanel titleAndGridPanel = new JPanel(new BorderLayout());
+        titleAndGridPanel.add(previewTitle, BorderLayout.NORTH);
+        titleAndGridPanel.add(previewGridWrapper, BorderLayout.CENTER);
+        titleAndGridPanel.add(scorePanel, BorderLayout.SOUTH);
+
+        // Padding around the whole preview section
+        JPanel paddedPreview = new JPanel(new BorderLayout());
+        paddedPreview.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        paddedPreview.add(titleAndGridPanel, BorderLayout.CENTER);
+
+        // Center vertically & horizontally in EAST
+        JPanel centerInEast = new JPanel(new GridBagLayout());
+        centerInEast.add(paddedPreview);
+        centerInEast.setPreferredSize(new Dimension(200, 0));
+
+        //add padded preview panel to border panel
+        borderPanel.add(centerInEast, BorderLayout.EAST);
+
+        // Créer le panel du bouton play-pause
+        JPanel playPause = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        playPause.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 150));
 
         JLabel play = new JLabel(playOrPause);
-        play.setBorder(new LineBorder(Color.BLACK));
-        prevPiece.setBorder(new LineBorder(Color.BLACK));
+        play.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(Color.BLACK), // outer border
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)
+        ));
+        play.setFont(new Font("Arial", Font.BOLD, 20));
 
         playPause.addMouseListener(new MouseAdapter() {
             @Override
@@ -75,54 +123,20 @@ public class Vue extends JFrame implements Observer, KeyListener {
             }
         });
 
-        // Assembler les composants
-
         playPause.add(play);
-
-        northPanel.setPreferredSize(new Dimension(50, 50));
-        southPanel.setPreferredSize(new Dimension(50, 50));
-        eastPanel.setPreferredSize(new Dimension(50, 50));
-        westPanel.setPreferredSize(new Dimension(50, 50));
-
-
-        // Ajouter les éléments du BorderLayout
-        contenPrev.add(prevPiece, BorderLayout.CENTER);
-        contenPrev.add(northPanel, BorderLayout.NORTH);
-        contenPrev.add(southPanel, BorderLayout.SOUTH);
-        contenPrev.add(eastPanel, BorderLayout.EAST);
-        contenPrev.add(westPanel, BorderLayout.WEST);
-
-        borderPanel.add(gridPanel, BorderLayout.CENTER);
-        borderPanel.add(contenPrev, BorderLayout.NORTH);
-        borderPanel.add(new JPanel(), BorderLayout.EAST);
-        borderPanel.add(new JPanel(), BorderLayout.WEST);
         borderPanel.add(playPause, BorderLayout.SOUTH);
 
-        playPause.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // jeu.playPause();
-            }
-        });
-
-        // Remplissage des cases de prevPiece
+        // Remplissage de la grille piece preview
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 JPanel c = new JPanel();
                 c.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-                prev[i][j] = c; //permet de sauvegarder la position de chaque case
+                prev[i][j] = c;
 
                 final int row = i;
                 final int col = j;
 
-                c.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("row/col: " + row + "/" + col);
-                        // jeu.set(row,col);
-                    }
-                });
-                prevPiece.add(c);
+                previewPanel.add(c);
             }
         }
 
@@ -130,26 +144,30 @@ public class Vue extends JFrame implements Observer, KeyListener {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 10; j++) {
                 JPanel c = new JPanel();
-                c.setBackground(Color.WHITE);
-                // c.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 tab[i][j] = c; //permet de sauvegarder la position de chaque case
 
                 final int row = i;
                 final int col = j;
 
-//                c.addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mouseClicked(MouseEvent e) {
-//                        System.out.println("row/col: " + row +"/"+col);
-//                        jeu.set(row,col);
-//                        update(new Observable(), jeu);
-//                    }
-//                });
+                c.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+
                 gridPanel.add(c);
             }
         }
 
+        JPanel paddedMainGridWrapper = new JPanel(new BorderLayout());
+        paddedMainGridWrapper.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0));
+
+
+        // Wrap the Grid panel in a ratio respecting container
+        AspectRatioPanel centeredGridWrapper = new AspectRatioPanel(10.0 / 20.0, gridPanel);
+        centeredGridWrapper.setPreferredSize(new Dimension(300, 600));
+
+        paddedMainGridWrapper.add(centeredGridWrapper, BorderLayout.CENTER);
+        borderPanel.add(paddedMainGridWrapper, BorderLayout.CENTER);
+
         this.add(borderPanel);
+        setLocationRelativeTo(null);
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -198,7 +216,6 @@ public class Vue extends JFrame implements Observer, KeyListener {
 
 
             // Afficher la pièce à venir
-
             PieceCourante nextPc = jeu.getNextPc();
             if (nextPc != null) {
                 int[][] motif = nextPc.getMotif();
@@ -213,7 +230,7 @@ public class Vue extends JFrame implements Observer, KeyListener {
                 }
             }
 
-            // ➕ Afficher la pièce courante
+            // Afficher la pièce courante
             PieceCourante pc = jeu.getPc();
             if (pc != null) {
                 int[][] motif = pc.getMotif();
@@ -235,29 +252,6 @@ public class Vue extends JFrame implements Observer, KeyListener {
                 }
             }
         }
-
-//        if(jeu.isGameOver()){
-//            System.out.println("game ovvvverrr");
-//            String[] options = { "quit", "play again" };
-//            int choice = JOptionPane.showOptionDialog(
-//                    null,
-//                    "Game Over!\nDo you want to play again?",
-//                    "Game Over",
-//                    JOptionPane.YES_NO_OPTION,
-//                    JOptionPane.QUESTION_MESSAGE,
-//                    null,
-//                    options,
-//                    options[1]
-//            );
-//
-//            if (choice == 1) {
-//                jeu.restartGame();
-//            } else {
-//                System.exit(0);
-//            }
-//
-//        }
-
 
     }
 
