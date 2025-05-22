@@ -33,7 +33,7 @@ public class Jeu extends Observable implements Runnable {
             gameOver = true;
             System.out.println("Cannot start game, grid already blocked");
         } else {
-            ordonnanceur = new Ordonnanceur(this, 500);
+            ordonnanceur = new Ordonnanceur(this, 1000);
             ordonnanceur.start();
         }
     }

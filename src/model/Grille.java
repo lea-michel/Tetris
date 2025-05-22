@@ -145,7 +145,7 @@ public class Grille {
             }
         }
         if(count>1){
-            score= (int) (score+(Math.pow(20,count)));
+            score= (int) (score+100*(Math.pow(count,2)));
         }else if (count==1){
             score+=20;
         }
