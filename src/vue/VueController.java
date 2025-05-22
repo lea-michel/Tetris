@@ -311,11 +311,7 @@ public class VueController extends JFrame implements Observer, KeyListener {
             case KeyEvent.VK_RIGHT:
                 jeu.movePc(0, 1);
                 break;
-            case KeyEvent.VK_W:
-                System.out.println("DROITE");
-                jeu.rotaPc(Direction.DROITE);
-                break;
-            case KeyEvent.VK_X:
+            case KeyEvent.VK_UP:
                 jeu.rotaPc(Direction.GAUCHE);
                 break;
             case KeyEvent.VK_DOWN:
