@@ -73,7 +73,8 @@ public class Jeu extends Observable implements Runnable {
            if (pc.printMove(x, y)) {
                this.grille.setPcX(this.grille.getPcX() + x);
                this.grille.setPcY(this.grille.getPcY() + y);
-
+               setChanged();
+               notifyObservers();
            }
        }
 
@@ -82,6 +83,8 @@ public class Jeu extends Observable implements Runnable {
     public void rotaPc(Direction direction) {
         if (grille.checkRotaPossible(pc, direction)) {
             pc.rotation(direction);
+            setChanged();
+            notifyObservers();
         }
     }
 
