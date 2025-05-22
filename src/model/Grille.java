@@ -83,7 +83,7 @@ public class Grille {
     public boolean checkMovePossible(int[][] motif, int x, int y){
         int motifSize = motif.length;
 
-        //parcourir la petite grille de la pièce courante
+        //go through small grid of motif
         for(int i = 0; i<motifSize; i++){
             for(int j=0; j<motifSize; j++){
                 if (motif[i][j]!=0){
@@ -92,7 +92,6 @@ public class Grille {
 
                     //verify out of bounds
                     if(newX >= tab.length || newY<0 || newY>=tab[0].length){
-                        System.out.println("Sortie de champs");
                         return false;
                     }
 
@@ -113,7 +112,7 @@ public class Grille {
     public boolean lockPiece(){
         int[][] motif = pc.getMotif();
         int motifSize = motif.length;
-        //parcourir la petite grille de la pièce courante
+        //go through the small grid of the motif
         for(int i = 0; i<motifSize; i++){
             for(int j=0; j<motifSize; j++){
                 if (motif[i][j]!=0){

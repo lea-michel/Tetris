@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HighScoreManager {
-    private static final String FILE_PATH = "highscores.txt";
+    private static final String FILE_PATH = "highscores.tar";
     private List<ScoreEntry> highScores = new ArrayList<>();
 
     public HighScoreManager() {
@@ -52,30 +52,12 @@ public class HighScoreManager {
 
     private void loadScores() {
         File file = new File(FILE_PATH);
-        if (!file.exists()) return;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":");
-
-                if (parts.length == 2) {
-                    String name = parts[0];
-                    int score = Integer.parseInt(parts[1]);
-                    highScores.add(new ScoreEntry(name, score));
-                }
+        if (file.exists()) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+                highScores = (List<ScoreEntry>) in.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            // Trie décroissant
-            highScores.sort((a, b) -> b.getScore() - a.getScore());
-
-            // Garde uniquement les 10 meilleurs scores
-            if (highScores.size() > 10) {
-                highScores = highScores.subList(0, 10);
-            }
-
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -68,11 +68,15 @@ public class Jeu extends Observable implements Runnable {
 
     public void movePc(int x, int y) {
 
-        if (pc.printMove(x, y)) {
-            this.grille.setPcX(this.grille.getPcX() + x);
-            this.grille.setPcY(this.grille.getPcY() + y);
 
-        }
+       if(pc!=null){
+           if (pc.printMove(x, y)) {
+               this.grille.setPcX(this.grille.getPcX() + x);
+               this.grille.setPcY(this.grille.getPcY() + y);
+
+           }
+       }
+
     }
 
     public void rotaPc(Direction direction) {

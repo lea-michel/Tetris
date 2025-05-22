@@ -192,6 +192,12 @@ public class VueController extends JFrame implements Observer, KeyListener {
 
     private void showHighScores() {
         List<ScoreEntry> scores = jeu.getHighScoreManager().getHighScores();
+
+        if (scores.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No high scores yet!");
+            return;
+        }
+
         StringBuilder message = new StringBuilder("High Scores:\n");
 
         for (ScoreEntry entry : scores) {
